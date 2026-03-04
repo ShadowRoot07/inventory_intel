@@ -1,9 +1,8 @@
 from django.contrib import admin
-from django.urls import path
-from inventory.views import dashboard
+from django.urls import path, include # Importamos 'include'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', dashboard, name='dashboard'),
+    path('', include('inventory.urls')), 
 ]
 
