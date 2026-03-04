@@ -45,6 +45,19 @@ El sistema ha sido sometido a pruebas de estrés y validación mediante **Pytest
 test-python
 ```
 
+## 🔐 Acceso de Auditoría (Testing Credentials)
+
+Para pruebas manuales y validación de la integridad del sistema, se ha configurado un perfil de superusuario con datos de telemetría pre-cargados.
+
+| Atributo | Credencial de Acceso |
+| :--- | :--- |
+| **Identificador (User)** | `tester_shadow` |
+| **Código de Acceso (Pass)** | `ShadowPassword2026` |
+| **Nivel de Privilegio** | `Superuser / Root Access` |
+
+> **Nota de Seguridad:** Estas credenciales están destinadas exclusivamente a entornos de desarrollo local y staging. En el despliegue final de producción, este acceso será revocado para cumplir con las políticas de endurecimiento (hardening) del sistema.
+
+
 ## 🚀 Despliegue (Deployment)
 El sistema está configurado para operar en entornos Serverless (Vercel) utilizando:
 + WhiteNoise: Para una entrega eficiente de activos estáticos con compresión Gzip.
