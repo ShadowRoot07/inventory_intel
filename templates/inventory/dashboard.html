@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Sistema de Inteligencia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-4 border-bottom">
+    <h1 class="h2 fw-black text-dark tracking-tighter">ANÁLISIS DE SISTEMA</h1>
+    
+    <div class="btn-toolbar mb-2 mb-md-0 gap-2">
+        <a href="{% url 'export_csv' %}" class="btn btn-sm btn-outline-secondary">
+            📥 Exportar Inventario (CSV)
+        </a>
+        {% if product_id %}
+            <a href="{% url 'export_pdf' product_id %}" class="btn btn-sm btn-primary">
+                📄 Descargar Reporte PDF
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4 p-3 bg-white">
+    <form method="GET" class="row g-3 align-items-center">
+        <div class="col-md-4">
+            <select name="category" class="form-select form-select-sm">
+                <option value="">Todas las Categorías</option>
+                {% for cat in categories %}
+                    <option value="{{ cat }}" {% if request.GET.category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select name="status" class="form-select form-select-sm">
+                <option value="">Todos los Estados</option>
+                <option value="critico" {% if request.GET.status == 'critico' %}selected{% endif %}>🚨 Stock Crítico (<10)</option>
+                <option value="advertencia" {% if request.GET.status == 'advertencia' %}selected{% endif %}>⚠️ Advertencia (<25)</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-sm btn-dark w-100">Aplicar Filtros</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary w-100">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="table-responsive p-3">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr style="font-size: 0.8rem;" class="text-uppercase text-muted">
+                    <th>Producto</th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in products %}
+                <tr>
+                    <td class="fw-bold">{{ p.name }}</td>
+                    <td>
+                        <span class="badge {% if p.stock_actual < 10 %}bg-danger{% elif p.stock_actual < 25 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                            {{ p.stock_actual }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'export_pdf' p.id %}" class="btn btn-sm btn-link text-primary p-0">PDF</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">No se encontraron productos con estos filtros.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-4 mb-4">
+            <h6 class="text-primary fw-bold text-uppercase small mb-3">Métricas Automáticas</h6>
+            {% if metrics %}
+                <div class="mb-3">
+                    <label class="text-muted small d-block">Estado de Salud:</label>
+                    <span class="badge {% if 'Crítico' in metrics.estado_alerta %}bg-danger{% else %}bg-success{% endif %} p-2">
+                        {{ metrics.estado_alerta }}
+                    </span>
+                </div>
+                <div class="row text-center">
+                    <div class="col-6 border-end">
+                        <p class="text-muted small mb-0">Entradas</p>
+                        <p class="h5 fw-bold text-success">+{{ metrics.total_entradas }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-muted small mb-0">Salidas</p>
+                        <p class="h5 fw-bold text-danger">-{{ metrics.total_salidas }}</p>
+                    </div>
+                </div>
+                <hr>
+                <p class="text-muted font-monospace" style="font-size: 0.7rem;">
+                    Último Análisis: {{ metrics.fecha_analisis }}
+                </p>
+            {% else %}
+                <p class="text-muted small italic">Sin datos de análisis disponibles.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm p-2">
+            <div class="card-header bg-white border-0 pt-3">
+                <h6 class="fw-bold text-secondary">Evolución de Inventario: {{ product_name }}</h6>
+            </div>
+            {% if chart_url %}
+                <img src="{{ chart_url }}" class="img-fluid rounded" alt="Gráfica de Inventario">
+            {% else %}
+                <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 300px;">
+                    <p class="text-muted small">No hay suficientes movimientos para generar la gráfica.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

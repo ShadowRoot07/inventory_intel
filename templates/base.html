@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Intel{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #10b981; 
+            --bs-dark: #0f172a;
+        }
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .navbar { background-color: var(--bs-dark) !important; border-bottom: 2px solid var(--bs-primary); }
+        .card { border-radius: 15px; border: none; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .sidebar { min-height: 100vh; background: white; border-right: 1px solid #e2e8f0; }
+        .nav-link:hover { color: var(--bs-primary) !important; background: #f1f5f9; border-radius: 8px; }
+        .btn-primary { background-color: var(--bs-primary); border: none; }
+        .btn-primary:hover { background-color: #059669; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">
+                📦 INVENTORY<span class="text-primary">INTEL</span>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link text-secondary font-monospace small">Terminal: ShadowRoot-07 // 2026</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block sidebar p-3">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link active fw-bold text-dark p-2" href="{% url 'dashboard' %}">🏠 Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark p-2" href="#">📦 Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark p-2" href="#">📊 Reportes</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-10 px-md-4 py-4">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
