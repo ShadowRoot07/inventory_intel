@@ -7,20 +7,20 @@
     <h1 class="h2 fw-black text-dark tracking-tighter">ANÁLISIS DE SISTEMA</h1>
     
     <div class="btn-toolbar mb-2 mb-md-0 gap-2">
-        <a href="{% url 'export_csv' %}" class="btn btn-sm btn-outline-dark">
+        <a href="{% url 'export_csv' %}" class="btn btn-sm btn-outline-dark shadow-sm">
             📥 Exportar Master CSV
         </a>
     </div>
 </div>
 
 <div class="d-flex flex-wrap gap-2 mb-4">
-    <a href="{% url 'admin:inventory_product_add' %}" class="btn btn-success shadow-sm">
+    <a href="/admin/inventory/product/add/" class="btn btn-success shadow-sm">
         ➕ Registrar Producto
     </a>
-    <a href="{% url 'admin:inventory_category_add' %}" class="btn btn-outline-primary shadow-sm">
+    <a href="/admin/inventory/category/add/" class="btn btn-outline-primary shadow-sm bg-white">
         📁 Nueva Categoría
     </a>
-    <a href="{% url 'admin:inventory_inventorymovement_add' %}" class="btn btn-outline-dark shadow-sm">
+    <a href="/admin/inventory/inventorymovement/add/" class="btn btn-outline-dark shadow-sm bg-white">
         📊 Registrar Movimiento
     </a>
 </div>
@@ -69,11 +69,11 @@
                         </span>
                     </td>
                     <td class="text-end pe-3">
-                        <div class="btn-group">
+                        <div class="btn-group shadow-sm">
                             <a href="{% url 'export_pdf' p.id %}" class="btn btn-sm btn-outline-danger">
                                 PDF
                             </a>
-                            <a href="{% url 'admin:inventory_product_change' p.id %}" class="btn btn-sm btn-outline-secondary">
+                            <a href="/admin/inventory/product/{{ p.id }}/change/" class="btn btn-sm btn-outline-secondary">
                                 EDIT
                             </a>
                         </div>
@@ -81,7 +81,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3" class="text-center text-muted py-4">
+                    <td colspan="3" class="text-center text-muted py-4 font-monospace">
                         [!] No se detectaron registros en el segmento seleccionado.
                     </td>
                 </tr>
@@ -96,13 +96,13 @@
         <div class="card p-4 mb-4 border-0 shadow-sm">
             <h6 class="text-primary fw-bold text-uppercase small mb-3">Métricas de Salud</h6>
             {% if metrics %}
-                <div class="mb-3">
-                    <label class="text-muted small d-block">Estado General:</label>
+                <div class="mb-3 text-center">
+                    <label class="text-muted small d-block mb-1">Estado General del Sistema:</label>
                     <span class="badge {% if 'Crítico' in metrics.estado_alerta %}bg-danger{% else %}bg-success{% endif %} p-2 w-100">
                         {{ metrics.estado_alerta }}
                     </span>
                 </div>
-                <div class="row text-center">
+                <div class="row text-center mt-3">
                     <div class="col-6 border-end">
                         <p class="text-muted small mb-0">Entradas</p>
                         <p class="h5 fw-bold text-success">+{{ metrics.total_entradas }}</p>
@@ -113,11 +113,14 @@
                     </div>
                 </div>
                 <hr>
-                <p class="text-muted font-monospace" style="font-size: 0.7rem;">
-                    Sync: {{ metrics.fecha_analisis }}
+                <p class="text-muted font-monospace text-center" style="font-size: 0.65rem;">
+                    Last Sync: {{ metrics.fecha_analisis }}
                 </p>
             {% else %}
-                <p class="text-muted small italic text-center">Iniciando escaneo de datos...</p>
+                <div class="text-center py-3">
+                    <div class="spinner-border spinner-border-sm text-secondary mb-2" role="status"></div>
+                    <p class="text-muted small italic">Sincronizando flujos de datos...</p>
+                </div>
             {% endif %}
         </div>
     </div>
@@ -131,8 +134,8 @@
                 <img src="{{ chart_url }}" class="img-fluid rounded shadow-sm" alt="Análisis Gráfico">
             {% else %}
                 <div class="d-flex flex-column align-items-center justify-content-center bg-light rounded" style="min-height: 250px;">
-                    <span class="text-muted mb-2">📊</span>
-                    <p class="text-muted small">Datos insuficientes para renderizar telemetría visual.</p>
+                    <div class="display-6 text-muted mb-2">📊</div>
+                    <p class="text-muted small">Telemetría insuficiente para renderizar gráficos.</p>
                 </div>
             {% endif %}
         </div>
