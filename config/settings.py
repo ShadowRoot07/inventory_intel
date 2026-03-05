@@ -121,6 +121,10 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+STATIC_URL = '/static/' 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Configuración de Seguridad para Producción
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -129,4 +133,10 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
 
 # IMPORTANTE: Asegúrate de que Matplotlib no intente usar una interfaz gráfica
-os.environ['MPLCONFIGDIR'] = '/tmp/matplotlib'
+if os.getenv('TERMUX_VERSION'): # Si detecta que estás en Termux
+    TMP_DIR = os.path.join(BASE_DIR, 'tmp')
+else: # Si estás en Vercel o Docker
+    TMP_DIR = '/tmp'
+
+os.makedirs(TMP_DIR, exist_ok=True)
+os.environ['MPLCONFIGDIR'] = os.path.join(TMP_DIR, 'matplotlib')
